@@ -38,8 +38,8 @@ const createUsersTable = () => {
 const insertSampleUsers = () => {
     const query = `
         INSERT INTO users (username, password, role) VALUES
-        ('admin', SHA2('admin123', 256), 'admin'),
-        ('user', SHA2('user123', 256), 'user')
+        ('admin', 'admin123', 'admin'),
+        ('user', 'user123', 'user')
     `;
 
     connection.query(query, (err, results) => {
