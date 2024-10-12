@@ -69,7 +69,7 @@ router.get('/admin', (req, res) => {
     const decoded = jwt.verify(token, '12345');  // Vulnerable: Weak JWT secret
     console.log(decoded);
     if (decoded.role === 'admin') {
-        res.send('Welcome to the admin panel!' + decoded);
+        res.send('Welcome to the admin panel!' + decoded.username);
     } else {
         res.status(403).send('Access denied');
     }

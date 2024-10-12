@@ -66,6 +66,25 @@ const createProductsTable = () => {
             console.error('Error creating products table:', err);
         } else {
             console.log('Products table created successfully.');
+            createPurchasesTable();
+        }
+    });
+};
+
+// Function to create products table
+const createPurchasesTable = () => {
+    const query = `
+        CREATE TABLE IF NOT EXISTS purchases (
+            id INT AUTO_INCREMENT PRIMARY KEY,
+            product_id INT(2) NOT NULL,
+            price DECIMAL(10, 2) NOT NULL
+        )`;
+
+    connection.query(query, (err, results) => {
+        if (err) {
+            console.error('Error creating products table:', err);
+        } else {
+            console.log('Purchases table created successfully.');
             insertSampleProducts();
         }
     });
@@ -86,9 +105,27 @@ const insertSampleProducts = () => {
             console.error('Error inserting sample products:', err);
         } else {
             console.log('Sample products inserted successfully.');
+            exitProcess();  // Exit after inserting sample products
         }
     });
 };
+
+
+
+
+
+// Function to exit the process
+const exitProcess = () => {
+    connection.end(err => {
+        if (err) {
+            console.error('Error closing the database connection:', err);
+        } else {
+            console.log('Database connection closed. Exiting setup script.');
+        }
+        process.exit(0);  // Exit the process
+    });
+};
+
 
 // Function to run all setup tasks
 const runSetup = () => {

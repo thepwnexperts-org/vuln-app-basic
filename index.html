@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vulnerable App</title>
+</head>
+<body>
+    <h1>Vulnerable Application</h1>
+    
+    <!-- Products Section -->
+    <section>
+        <h2>Products</h2>
+        <button onclick="fetchProducts()">Fetch Products</button>
+        <ul id="productsList"></ul>
+    </section>
+
+    <!-- Purchase Section -->
+    <section>
+        <h2>Purchase</h2>
+        <form id="purchaseForm" onsubmit="purchaseProduct(event)">
+            <input type="text" id="productId" placeholder="Product ID">
+            <input type="text" id="price" placeholder="Price">
+            <button type="submit">Purchase</button>
+        </form>
+        <div id="purchaseMessage"></div>
+    </section>
+
+    <!-- Login Section -->
+    <section>
+        <h2>Login</h2>
+        <form id="loginForm" onsubmit="login(event)">
+            <input type="text" id="username" placeholder="Username">
+            <input type="password" id="password" placeholder="Password">
+            <button type="submit">Login</button>
+        </form>
+        <div id="loginMessage"></div>
+    </section>
+
+    <!-- Admin Section -->
+    <section>
+        <h2>Admin Panel</h2>
+        <button onclick="accessAdmin()">Access Admin Panel</button>
+        <div id="adminMessage"></div>
+    </section>
+
+    <!-- JavaScript -->
+    <script>
+        // Fetch Products
+        function fetchProducts() {
+            fetch('https://v-node.alltesting.tech/vuln/products')
+                .then(response => response.json())
+                .then(data => {
+                    const productsList = document.getElementById('productsList');
+                    productsList.innerHTML = '';
+                    data.forEach(product => {
+                        const li = document.createElement('li');
+                        li.textContent = `Product ID: ${product.id}, Name: ${product.name}, Price: ${product.price}`;
+                        productsList.appendChild(li);
+                    });
+                })
+                .catch(err => console.error('Error fetching products:', err));
+        }
+
+        // Purchase Product
+        function purchaseProduct(event) {
+            event.preventDefault();
+            const productId = document.getElementById('productId').value;
+            const price = document.getElementById('price').value;
+
+            fetch('https://v-node.alltesting.tech/vuln/purchase', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ productId, price })
+            })
+                .then(response => response.text())
+                .then(message => {
+                    document.getElementById('purchaseMessage').textContent = message;
+                })
+                .catch(err => console.error('Error purchasing product:', err));
+        }
+
+        // Login
+        function login(event) {
+            event.preventDefault();
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+
+            fetch('https://v-node.alltesting.tech/vuln/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ username, password })
+            })
+                .then(response => response.text())
+                .then(message => {
+                    document.getElementById('loginMessage').textContent = message;
+                })
+                .catch(err => console.error('Error logging in:', err));
+        }
+
+        // Access Admin Panel
+        function accessAdmin() {
+            const token = prompt('Enter your JWT token:');
+            fetch('https://v-node.alltesting.tech/vuln/admin', {
+                headers: {
+                    'Authorization': token
+                }
+            })
+                .then(response => response.text())
+                .then(message => {
+                    document.getElementById('adminMessage').textContent = message;
+                })
+                .catch(err => console.error('Error accessing admin panel:', err));
+        }
+    </script>
+</body>
+</html>

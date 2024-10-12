@@ -12,5 +12,5 @@ function generateJWT(username, role) {
 }
 
 // Example usage
-generateJWT('admin', 'admin');
+generateJWT('vikas', 'admin');
 
